@@ -34,13 +34,13 @@ func loadEnv() {
 	}
 
 	// 환경 변수 로드
-	DB_USER = getEnv("DB_USER", "root")
-	DB_PASSWORD = getEnv("DB_PASSWORD", "password")
-	DB_NAME = getEnv("DB_NAME", "mydb")
-	DB_HOST = getEnv("DB_HOST", "127.0.0.1")
-	DB_PORT = getEnv("DB_PORT", "3306")
-	MQTT_BROKER = getEnv("MQTT_BROKER", "tcp://broker.hivemq.com:1883")
-	MQTT_TOPIC = getEnv("MQTT_TOPIC", "sensor/data")
+	DB_USER = getEnv("DB_USER", "")
+	DB_PASSWORD = getEnv("DB_PASSWORD", "")
+	DB_NAME = getEnv("DB_NAME", "")
+	DB_HOST = getEnv("DB_HOST", "")
+	DB_PORT = getEnv("DB_PORT", "")
+	MQTT_BROKER = getEnv("MQTT_BROKER", "")
+	MQTT_TOPIC = getEnv("MQTT_TOPIC", "")
 }
 
 // 환경 변수가 없을 경우 기본값 제공
