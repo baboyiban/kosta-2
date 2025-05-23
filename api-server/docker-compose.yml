@@ -13,7 +13,7 @@ services:
       - "${API_PORT}:${API_PORT}"
     depends_on:
       db:
-        condition: service_healthy  # MySQL이 healthy 상태가 되면 실행
+        condition: service_healthy
     networks:
       - backend
 
@@ -30,10 +30,10 @@ services:
       MYSQL_USER: "${DB_USER}"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
     volumes:
-      - data:/var/lib/mysql
+      - data:/var/lib/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-uroot", "-prootpassword"]
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-p${DB_ROOT_PASSWORD}"]
       interval: 5s
       timeout: 10s
       retries: 10

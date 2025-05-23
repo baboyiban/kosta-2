@@ -1,5 +1,1 @@
-CREATE TABLE IF NOT EXISTS data (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    value VARCHAR(100)
-)
+
