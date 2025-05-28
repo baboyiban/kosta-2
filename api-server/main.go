@@ -11,16 +11,8 @@ import (
 	"gorm.io/gorm"
 )
 
-type Product struct {
-	ID            uint   `gorm:"primaryKey;autoIncrement"`
-	Type          string `gorm:"type:varchar(50)"`
-	ZoneId        string `gorm:"type:char(3)"`
-	Zone          Zone   ``
-	CurrentStatus string `gorm:"type:varchar(50)"`
-}
-
 type Zone struct {
-	ID          string `gorm:"type:char(3);primaryKey"`
+	ID          string `gorm:"type:char(3);primaryKey" binding:"required"`
 	Name        string `gorm:"type:varchar(50)"`
 	X           int    `` // X 좌표
 	Y           int    `` // Y 좌표
@@ -29,14 +21,22 @@ type Zone struct {
 	IsFull      bool   `` // 1: 포화, 0: 여유
 }
 
+type Product struct {
+	ID            uint   `gorm:"primaryKey;autoIncrement"`
+	Type          string `gorm:"type:varchar(50)"`
+	ZoneID        string `gorm:"type:char(3)"`
+	Zone          Zone   ``
+	CurrentStatus string `gorm:"type:varchar(50)"`
+}
+
 type Vehicle struct {
-	ID          int    `gorm:"primaryKey;autoIncrement"`
+	ID          uint   `gorm:"primaryKey;autoIncrement"`
 	Type        string `gorm:"type:enum('CarA','CarB')"`
 	CurrentLoad int    ``
 }
 
 type OperationRecord struct {
-	ID        int        `gorm:"primaryKey;autoIncrement"`
+	ID        uint       `gorm:"primaryKey;autoIncrement"`
 	VehicleID int        ``
 	Vehicle   Vehicle    ``
 	Start     *time.Time ``
@@ -45,7 +45,7 @@ type OperationRecord struct {
 }
 
 type OperationProduct struct {
-	ID           int        `gorm:"primaryKey;autoIncrement"`
+	ID           uint       `gorm:"primaryKey;autoIncrement"`
 	ProductID    int        ``
 	Product      Product    ``
 	ZoneID       int        ``
@@ -177,17 +177,17 @@ func main() {
 
 	api := router.Group("/api")
 	{
-		// Product
-		api.POST("/products", createHandler[Product](db))
-		api.GET("/products", getAllHandler[Product](db))
-		api.PUT("/products/:id", updateHandler[Product](db))    // ID 기반 업데이트
-		api.DELETE("/products/:id", deleteHandler[Product](db)) // ID 기반 삭제
-
 		// Zone
 		api.POST("/zones", createHandler[Zone](db))
 		api.GET("/zones", getAllHandler[Zone](db))
 		api.PUT("/zones/:id", updateHandler[Zone](db))
 		api.DELETE("/zones/:id", deleteHandler[Zone](db))
+
+		// Product
+		api.POST("/products", createHandler[Product](db))
+		api.GET("/products", getAllHandler[Product](db))
+		api.PUT("/products/:id", updateHandler[Product](db))    // ID 기반 업데이트
+		api.DELETE("/products/:id", deleteHandler[Product](db)) // ID 기반 삭제
 
 		// Vehicle
 		api.POST("/vehicles", createHandler[Vehicle](db))
