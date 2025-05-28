@@ -12,50 +12,50 @@ import (
 )
 
 type Zone struct {
-	ID          string `gorm:"type:char(3);primaryKey" binding:"required"`
+	ID          string `gorm:"type:char(3);primaryKey"`
 	Name        string `gorm:"type:varchar(50)"`
-	X           int    `` // X 좌표
-	Y           int    `` // Y 좌표
-	LoadMax     int    `` // 최대 적재량
-	CurrentLoad int    `` // 현재 적재량
-	IsFull      bool   `` // 1: 포화, 0: 여유
+	X           int    // X 좌표
+	Y           int    // Y 좌표
+	LoadMax     int    // 최대 적재량
+	CurrentLoad int    // 현재 적재량
+	IsFull      bool   // 1: 포화, 0: 여유
 }
 
 type Product struct {
-	ID            uint   `gorm:"primaryKey;autoIncrement"`
+	ID            uint
 	Type          string `gorm:"type:varchar(50)"`
 	ZoneID        string `gorm:"type:char(3)"`
-	Zone          Zone   ``
+	Zone          Zone   `json:"-" gorm:"foreignKey:ZoneID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	CurrentStatus string `gorm:"type:varchar(50)"`
 }
 
 type Vehicle struct {
-	ID          uint   `gorm:"primaryKey;autoIncrement"`
+	ID          uint
 	Type        string `gorm:"type:enum('CarA','CarB')"`
-	CurrentLoad int    ``
+	CurrentLoad int
 }
 
 type OperationRecord struct {
-	ID        uint       `gorm:"primaryKey;autoIncrement"`
-	VehicleID int        ``
-	Vehicle   Vehicle    ``
-	Start     *time.Time ``
-	End       *time.Time ``
-	Status    string     `gorm:"type:enum('InProgress','Completed','Failed')"`
+	ID        uint
+	VehicleID uint
+	Vehicle   Vehicle `json:"-" gorm:"foreignKey:VehicleID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Start     *time.Time
+	End       *time.Time
+	Status    string `gorm:"type:enum('InProgress','Completed','Failed')"`
 }
 
 type OperationProduct struct {
-	ID           uint       `gorm:"primaryKey;autoIncrement"`
-	ProductID    int        ``
-	Product      Product    ``
-	ZoneID       int        ``
-	Zone         Zone       ``
-	LoadOrder    int        ``
-	RegisterTime *time.Time ``
-	AStartTime   *time.Time ``
-	AEndTime     *time.Time ``
-	BStartTime   *time.Time ``
-	BEndTime     *time.Time ``
+	ID           uint
+	ProductID    uint
+	Product      Product `json:"-" gorm:"foreignKey:ProductID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	ZoneID       string  `gorm:"type:char(3)"`
+	Zone         Zone    `json:"-" gorm:"foreignKey:ZoneID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	LoadOrder    int
+	RegisterTime *time.Time
+	AStartTime   *time.Time
+	AEndTime     *time.Time
+	BStartTime   *time.Time
+	BEndTime     *time.Time
 }
 
 func getDSN() string {
