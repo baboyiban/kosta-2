@@ -208,7 +208,7 @@ func main() {
 		api.DELETE("/operation_products/:id", deleteHandler[OperationProduct](db))
 	}
 
-	port := ":8080"
+	port := ":" + lookupEnv("API_PORT", "")
 	log.Printf("서버가 %s 포트에서 실행 중...", port)
 	if err := router.Run(port); err != nil {
 		log.Fatalf("서버 실행 실패: %v", err)
