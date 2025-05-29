@@ -48,8 +48,9 @@ services:
     container_name: traefik
     platform: linux/amd64
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
     networks:
       - backend
     volumes:
