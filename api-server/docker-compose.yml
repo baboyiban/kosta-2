@@ -17,7 +17,9 @@ services:
       # Traefik 라우팅 설정
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.whoami.entrypoints=web"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+    
   mysql:
     image: mysql:8
     container_name: mysql
@@ -47,18 +49,24 @@ services:
     platform: linux/amd64
     ports:
       - 80:80
-      - 8080:8080
+      - 443:443
     networks:
       - backend
     volumes:
+      - "./letsencrypt:/letsencrypt"
       - /var/run/docker.sock:/var/run/docker.sock:ro
     env_file: .env
     command:
       - "--log.level=DEBUG" # 디버그 모드
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" # 디버그 모드
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      
 volumes:
   data:
 
